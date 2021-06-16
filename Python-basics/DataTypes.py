@@ -55,4 +55,15 @@ print(f"{boolData}")
 boolData = False
 print(f"{boolData}")
 
+# Casting
+strData = str(boolData)
+print(type(strData))
+print(boolData)
+strData = "10.5"
+floatData = 10.4 + float(strData)
+print(floatData)
+strData = "10"
+intData = int("20") - int("53")
+print(intData)
+
 
