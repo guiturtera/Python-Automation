@@ -1,8 +1,10 @@
 import re
-import io
 import os
+import sys
 import git
-from git.objects import commit
+from datetime import datetime
+from git.repo.base import Repo
+
 
 class Commit:
     def __init__(self, hash, message, name, date):
@@ -13,49 +15,53 @@ class Commit:
         self.type, self.message = self.__get_message_info(message)
 
     def __str__(self) -> str:
-        return f"{self.name}"
+        return f"{self.hash}|{self.name}|{self.date} -> {self.message}"
 
     def __get_message_info(self, message):
-        data = re.split("[\(:]", message)[0]
-        return [ data[0], data[len(data) - 1] ]
+        data = re.split("[\(:]", message)
+        return [data[0], data[len(data) - 1].strip()]
 
-class CommitHandler:
-    def __init__(self):
-        print("initialized")
+def get_branch_path():
+    if len(sys.argv) == 2 and Repo(sys.argv[1]):
+        return sys.argv[1]
+    else:
+        return "."
+
+def get_organized_commits_dic(commits_data):
+    available_types = get_available_commits()
+    dic = {}
+    for type in available_types:
+        dic.setdefault(type, [])
+
+    # buf = io.StringIO()
+    for log in commits_data:
+        commit_list = log.split('|')  # hash|message|name lastname|date
+        # print(commit_list)
+        aux = Commit(commit_list[0], commit_list[1], commit_list[2], commit_list[3])
+        dic[aux.type].append(aux.__str__())
+    
+    return dic
 
 def get_available_commits():
-    with open("C:\\Users\\guilherme.turtera\\Desktop\\au\\.git\\hooks\Help\\available-commit-msg.txt", "r", encoding="utf-8") as file:
+    with open(".\\available-commit-msg.txt", "r", encoding="utf-8") as file:
         content = file.read().split('|')
     return content
 
 def get_commit_type(message):
     return re.split("[\(:]", message)[0]
 
-def get_last_release_date(g):
-    return g.log("-n 1", "--grep=release", "--oneline", "--pretty=%cs")
+def get_last_release_date(gitHandler):
+    strIso = (gitHandler.log("-n 1", "--grep=release", "--oneline", "--pretty=%ci")).replace(" -0300", "")   # default -0300 from git
+    aux = datetime.fromisoformat(strIso) # git default
+    aux = aux.replace(second = aux.second + 1)
+    return aux
 
-def get_last_commits_log(g):
-    return g.log("--date=short", f"--since={get_last_release_date(g)}", "--oneline", "--pretty=%h|%s|%cn %ce|%cs")
+def get_last_commits_log(gitHandler):
+    return gitHandler.log("--date=short", f"--since={get_last_release_date(gitHandler)}", "--oneline", "--pretty=%h|%s|%cN|%ci")
 
-# get it by a relative path
-branch_path = os.path.abspath("..")
+gitHandler = git.Git(get_branch_path())
 
-g = git.Git(branch_path)
+commits_data = get_last_commits_log(gitHandler).split('\n')
+organized_commits = get_organized_commits_dic(commits_data)
 
-commits_data = get_last_commits_log(g).split('\n')
-
-#changelog_path = os.path.abspath("..\\changelog.md")
-#with open(changelog_path, "r", encoding="utf-8") as file:
-#    changelog_content = file.read()
-
-available_types = get_available_commits()
-dic = {}
-
-buf = io.StringIO()
-for log in commits_data:
-    commit_list = log.split('|') # hash|message|name lastname|short style date 
-    aux = Commit(commit_list)
-    dic[aux.type].append(Commit(commit_list))
-
-print(buf.getvalue())
-
+print(organized_commits)
