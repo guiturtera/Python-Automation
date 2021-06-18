@@ -19,6 +19,10 @@ class Commit:
         data = re.split("[\(:]", message)[0]
         return [ data[0], data[len(data) - 1] ]
 
+class CommitHandler:
+    def __init__(self):
+        print("initialized")
+
 def get_available_commits():
     with open("C:\\Users\\guilherme.turtera\\Desktop\\au\\.git\\hooks\Help\\available-commit-msg.txt", "r", encoding="utf-8") as file:
         content = file.read().split('|')
@@ -50,7 +54,7 @@ dic = {}
 buf = io.StringIO()
 for log in commits_data:
     commit_list = log.split('|') # hash|message|name lastname|short style date 
-    aux = Commit(commit_list[0], commit_list[1], commit_list[2], commit_list[3])
+    aux = Commit(commit_list)
     dic[aux.type].append(Commit(commit_list))
 
 print(buf.getvalue())
