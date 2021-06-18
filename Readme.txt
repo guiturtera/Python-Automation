@@ -10,4 +10,3 @@ It should return the first python path as the .venv exe.
 python install -r requirements.txt # install in local environment dependencies
 don't forget to update the requirements.
 pip freeze > requirements.txt
-
