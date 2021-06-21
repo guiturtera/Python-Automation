@@ -1,0 +1,20 @@
+<type>([optional scope]): <description>
+
+<type>
+	improvement (used when developing some feat or fix, but not done yet)
+	refactor (used when refactoring) 
+	grunt (used for ordinary tasks, which do not affect the main code)
+	feat (used when added new features)
+	test (used when added tests)
+	docs (used when added documentation)
+	fix (used when a bug is fixed)
+
+[optional scope]
+	used for a short idea of the scope.
+	length must be between {3,15}
+	example:
+	refactor(lang): refactored us language
+
+<description>
+	length must have more than 10 letters
+	description about the commit

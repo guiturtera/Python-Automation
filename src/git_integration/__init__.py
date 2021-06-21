@@ -1,5 +1,5 @@
 from click.decorators import command
-from git_integration import git_deploy
+from git_integration import git_deploy, git_hook_install
 import click
 
 def command():
@@ -10,8 +10,5 @@ def git():
     """ Write 'flick git --help' for more info """
     pass
 
-@click.command()
-def deploy():
-    git_deploy.main()
-
-git.add_command(deploy)
+git.add_command(git_deploy.deploy)
+#git.add_command()
