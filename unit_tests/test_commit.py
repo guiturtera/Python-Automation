@@ -5,9 +5,9 @@ from src.git_integration.git_manager import Commit
 
 class TestCommit(unittest.TestCase):
     def setUp(self) -> None:
-        self.available_path = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'available-commits.txt')
+    #    self.available_path = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'available-commits.txt')
         self.available_path_text = 'feat|fix|release'
-        self.create_available_path()
+    #    self.create_available_path()
 
     # ainda adicionara um app config
     def test_split_commit_msg(self):
@@ -21,15 +21,15 @@ class TestCommit(unittest.TestCase):
         self.assertEqual(( False, '', '' ), Commit.split_commit_msg(None, f"release: {description_test}", { 'feat', 'fix' }))
 
         
-    def test_get_available_commits(self):
-        self.assertEqual({ 'feat', 'fix', 'release' }, Commit.get_available_commits(None, self.available_path))
+    #def test_get_available_commits(self):
+    #    self.assertEqual({ 'feat', 'fix', 'release' }, Commit.get_available_commits(None, self.available_path))
     
-    def create_available_path(self):
-        with open(self.available_path, 'w', encoding='utf-8') as f:
-            f.write(self.available_path_text)
+    #def create_available_path(self):
+    #    with open(self.available_path, 'w', encoding='utf-8') as f:
+    #        f.write(self.available_path_text)
 
-    def tearDown(self) -> None:
-        os.remove(self.available_path)
+    #def tearDown(self) -> None:
+        # os.remove(self.available_path)
 
 if __name__ == '__main__':
     unittest.main()

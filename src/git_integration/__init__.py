@@ -11,4 +11,4 @@ def git():
     pass
 
 git.add_command(git_deploy.deploy)
-#git.add_command()
+git.add_command(git_hook_install.install_hooks)

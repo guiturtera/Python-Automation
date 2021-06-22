@@ -17,12 +17,17 @@ class ChangelogHandler():
 
     def __changelog_text_to_append(self, commits_dic, new_version):
         buffer = io.StringIO()
+        buffer.write('\n')
+        buffer.write('## [')
+        buffer.write(new_version)
+        buffer.write('] \n')
         for commit_type in commits_dic.keys():
-            buffer.write('## [')
-            buffer.write(new_version)
-            buffer.write(']')
+            buffer.write('### ')
             buffer.write(commit_type)
+            buffer.write('\n')
             for commit in commits_dic[commit_type]:
                 buffer.write(commit.__str__())
                 buffer.write('\n')
+                print(buffer.getvalue())
+        buffer.write('\n')
         return buffer.getvalue()

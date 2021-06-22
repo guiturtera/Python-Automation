@@ -29,7 +29,7 @@ class TestChangelogHandler(unittest.TestCase):
         ff06ab9|Guilherme Turtera|2021-06-18 16:35:32 -0300 -> feat(aux): First feature commit
         78218e7|Guilherme Turtera|2021-06-18 16:34:54 -0300 -> fix(aux): Fourth commit fix"""
         self.changelog_mock_path = '.\\unit_tests\\changelog.md'
-        self.create_readme_mock()
+        self.create_changelog_mock()
 
         self.changelog_handler = ChangelogHandler(self.changelog_mock_path, self.commit_dic, VersionHandler(self.versioninfo_path, self.commit_dic))
 
@@ -39,7 +39,7 @@ class TestChangelogHandler(unittest.TestCase):
     def test___changelog_text_to_append(self):
         text = self.changelog_handler._ChangelogHandler__changelog_text_to_append(self.commit_dic, "v1.0.0")
         
-    def create_readme_mock(self):
+    def create_changelog_mock(self):
         with open(self.changelog_mock_path, 'w', encoding='utf-8') as f:
             f.write(self.changelog_mock_text)
 
