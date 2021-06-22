@@ -1,15 +1,22 @@
+from os import write
 import re
 
 class VersionHandler():
     def __init__(self, versioninfo_path, dic_commits):
+        self.versioninfo_path = versioninfo_path
+
         self.old_version = self.__get_current_version(versioninfo_path)
         self.new_version = self.__get_next_version(self.old_version, dic_commits)
+
+    def apply(self):
+        with open(self.versioninfo_path, 'w', encoding='utf-8') as f:
+            f.write(self.new_version)
 
     def __get_current_version(self, version_info_path):
         with open(version_info_path, 'r', encoding='utf-8') as f:
             content = f.read().strip().lower()
 
-        if re.match('^v([0-9]\.){2}[0-9]$', content):
+        if re.match('^v([0-9]*\.){2}[0-9]*$', content):
             return content
         else:
             raise Exception('Version info path invalid! Format must be vx.y.z')

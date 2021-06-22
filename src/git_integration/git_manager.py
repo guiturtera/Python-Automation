@@ -1,7 +1,8 @@
 import re
+from git_integration.version_handler import VersionHandler
 import sys
+import os
 import git
-from git.repo.base import Repo
 from datetime import datetime
 
 class GitManager():
@@ -10,6 +11,11 @@ class GitManager():
         self.gitHandler = git.Git(repo_directory)
         #if not Repo(repo_directory).bare:
         #    raise Exception('Not a single git repo!')
+
+    def commit_release(self, versioninfo: VersionHandler):
+        commit_msg = f"release: {versioninfo.new_version}"
+        self.gitHandler.add(".")
+        self.gitHandler.commit("-m", commit_msg)
 
     def __get_last_release_date(self):
         strIso = (self.gitHandler.log("-n 1", "--grep=release", "--oneline", "--pretty=%ci")).replace(" -0300", "")   # default -0300 from git
@@ -47,22 +53,23 @@ class Commit:
         self.message = message
         self.name = name
         self.date = date
-        self.valid, self.type, self.description = self.split_commit_msg(message, { 'improvement', 'refactor', 'grunt', 'feat', 'test', 'docs', 'fix', 'api' })
+        available_commits_path = os.path.join(os.path.dirname(__file__), "git_hooks", "Help", "available-commit-msg.txt")
+        self.valid, self.type, self.description = self.split_commit_msg(message, self.get_available_commits(available_commits_path))
 
     def __str__(self) -> str:
         return f"{self.description} -> {self.hash}|{self.name}|{self.date}"
 
     # use with app config
-    #def get_available_commits(self, available_commits_path):
-    #    with open(available_commits_path, "r", encoding="utf-8") as file:
-    #        content = file.read().split('|')
-    #    return set(content)
+    def get_available_commits(self, available_commits_path):
+        with open(available_commits_path, "r", encoding="utf-8") as file:
+            content = file.read().split('|')
+        return set(content)
 
     def split_commit_msg(self, message, available_types_dic):
         try:
             data = re.split("[\(:]", message)
             type, description = [ data[0], data[len(data) - 1].strip() ]
-            if available_types_dic.__contains__(type) and re.match(type + "(\(.{3,15}\))?: .{10,}", message):
+            if available_types_dic.__contains__(type) and re.match(type + "(\(.{3,15}\))?: .{6,}", message):
                 return ( True, type, description )
             else:
                 return ( False, '', '' )

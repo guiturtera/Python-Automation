@@ -8,6 +8,7 @@
 	test (used when added tests)
 	docs (used when added documentation)
 	fix (used when a bug is fixed)
+	api (when the public api is changed)
 
 [optional scope]
 	used for a short idea of the scope.

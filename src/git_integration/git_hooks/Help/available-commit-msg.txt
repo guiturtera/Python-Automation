@@ -1,1 +1,1 @@
-improvement|refactor|grunt|feat|test|docs|fix
+improvement|refactor|grunt|feat|test|docs|fix|api|release

@@ -14,13 +14,13 @@ class TestChangelogHandler(unittest.TestCase):
 
         self.commit_dic = { 
             "fix":
-            [ Commit("hash1", "name1", 'fix(aux): First fix commit', datetime.now().isoformat()),
-            Commit("hash2", "name2", 'fix: Second fix commit', datetime.now().isoformat()),
-            Commit("hash3", "name1", 'fix(aux): Third fix commit', datetime.now().isoformat()) ],
+            [ Commit("hash1", "fix(aux): First fix commit", 'name1', datetime.now().isoformat()),
+            Commit("hash2", "fix: Second fix commit", 'name2', datetime.now().isoformat()),
+            Commit("hash3", "fix(aux): Third fix commit", 'name1', datetime.now().isoformat()) ],
             "feat":
-            [ Commit("hash4", "name2", 'feat(aux): First feature commit', datetime.now().isoformat()),
-            Commit("hash5", "name2", 'feat: Second feature commit', datetime.now().isoformat()),
-            Commit("hash6", "name2", 'feat(aux): Third feature commit', datetime.now().isoformat()) ],
+            [ Commit("hash4", "feat(aux): First feature commit", 'name2', datetime.now().isoformat()),
+            Commit("hash5", "feat: Second feature commit", 'name2', datetime.now().isoformat()),
+            Commit("hash6", "feat(aux): Third feature commit", 'name2', datetime.now().isoformat()) ],
             }
         self.changelog_mock_text = """## [v1.0.0]
         ### fix

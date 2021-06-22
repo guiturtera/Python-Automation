@@ -1,5 +1,5 @@
 from click.decorators import command
-from git_integration import git_deploy, git_hook_install
+from git_integration import git_deploy, git_hook
 import click
 
 def command():
@@ -11,4 +11,5 @@ def git():
     pass
 
 git.add_command(git_deploy.deploy)
-git.add_command(git_hook_install.install_hooks)
+git.add_command(git_hook.install_hooks)
+git.add_command(git_hook.uninstall_hooks)

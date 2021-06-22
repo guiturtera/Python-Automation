@@ -8,7 +8,7 @@ from git_integration.changelog_handler import ChangelogHandler
 @click.command()
 @click.argument('repo_directory', type=click.Path(exists=True, allow_dash=True))
 @click.option('--changelog', type=click.Path(exists=True, allow_dash=True))
-@click.option('--version-info', type=click.Path(exists=True, allow_dash=True))
+@click.option('--version-info', '--vinfo', type=click.Path(exists=True, allow_dash=True))
 def deploy(repo_directory, changelog, version_info):
     """
     You must specify your git directory!
@@ -32,9 +32,16 @@ def deploy(repo_directory, changelog, version_info):
         gitManager = GitManager(repo_directory)
         lastCommits = gitManager.get_commits_since_last_release()
 
-        for commit_type in lastCommits.keys():
-            for commit in lastCommits[commit_type]:
-                click.secho(ChangelogHandler._ChangelogHandler__changelog_text_to_append(None, lastCommits, "v1.0.0"), fg='green')
+        version_handler = VersionHandler(version_info, lastCommits)
+        changelog_handler = ChangelogHandler(changelog, lastCommits, version_handler)
+
+        version_handler.apply()
+        changelog_handler.apply()
+
+        gitManager.commit_release(version_handler)
+
+        click.secho(changelog_handler.new_text_to_append, fg='green')
 
     except Exception as ex:
-        click.echo(click.style(ex.args[0], fg='red'))
+        for i in ex.args:
+                click.secho(i, fg='red')

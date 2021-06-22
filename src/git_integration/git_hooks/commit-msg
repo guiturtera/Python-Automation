@@ -12,20 +12,21 @@ def get_text_from_file(path):
         text = file.read()
     return text
 
-commit_msg_path = sys.argv[1]
-commit_msg = get_text_from_file(commit_msg_path).strip().lower()
 
-help_dir = os.path.join(os.path.dirname(__file__), "Help")
-help_msg = get_text_from_file(os.path.join(help_dir, "commit-msg.txt"))
-available_commit = set(get_text_from_file(os.path.join(help_dir, "available-commit-msg.txt")).split('|'))
+def main(commit_msg_path):
+    commit_msg = get_text_from_file(commit_msg_path).strip().lower()
 
-type = re.split("[\(:]", commit_msg)[0]
-    
-if available_commit.__contains__(type) and re.match(type + "(\(.{3,15}\))?: .{10,}", commit_msg):
-    print("Success!")
-else:
-    print(help_msg)
-    raise SystemExit(1)
+    help_dir = os.path.join(os.path.dirname(__file__), "Help")
+    help_msg = get_text_from_file(os.path.join(help_dir, "commit-msg.txt"))
+    available_commit = set(get_text_from_file(os.path.join(help_dir, "available-commit-msg.txt")).split('|'))
+
+    type = re.split("[\(:]", commit_msg)[0]
+        
+    if available_commit.__contains__(type) and re.match(type + "(\(.{3,15}\))?: .{6,}", commit_msg):
+        print("Success!")
+    else:
+        print(help_msg)
+        raise TypeError
 
 
-#print(help_msg)
+main(sys.argv[1])
