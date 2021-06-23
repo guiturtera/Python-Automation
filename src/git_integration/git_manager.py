@@ -32,6 +32,9 @@ class GitManager():
 
     def __get_organized_commits_dic(self, commits_data):
         dic = {}
+        if commits_data[0] == "":
+            raise Exception("no commits to release.")
+
         for log in commits_data:
             commit_list = log.split('|')  # hash|message|name lastname|date
             current_commit = Commit(commit_list[0], commit_list[1], commit_list[2], commit_list[3])

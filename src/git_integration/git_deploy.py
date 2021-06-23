@@ -1,5 +1,6 @@
 import re
 import os
+from typing import Type
 import click
 from git_integration.git_manager import GitManager
 from git_integration.version_handler import VersionHandler
@@ -41,7 +42,7 @@ def deploy(repo_directory, changelog, version_info):
         gitManager.commit_release(version_handler)
 
         click.secho(changelog_handler.new_text_to_append, fg='green')
-
     except Exception as ex:
         for i in ex.args:
-                click.secho(i, fg='red')
+            click.secho(i, fg='red')
+

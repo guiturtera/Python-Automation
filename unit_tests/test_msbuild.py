@@ -63,6 +63,7 @@ class TestVersionHandler(unittest.TestCase):
         self.assertEqual(self.default_assembly_mock, result)
 
     def test_build(self):
+        ''' Specific framework call '''
         pass
 
     def test_prepare_and_build_multiple(self):
