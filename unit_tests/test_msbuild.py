@@ -42,7 +42,6 @@ class TestVersionHandler(unittest.TestCase):
         except: 
             shutil.rmtree(self.mock_dir)
 
-
     def test___convert_multiple_pattern(self):
         type_test = "aux\\aux2\\aux3\\{project_name}\\aux4\\aux5"
         self.assertEqual([ "aux\\aux2\\aux3", "aux4\\aux5" ], Msbuild._Msbuild__convert_multiple_pattern(None, type_test))

@@ -38,7 +38,7 @@ def deploy(repo_directory, changelog, version_info):
         changelog_handler.apply()
         version_handler.apply()
 
-        #gitManager.commit_release(version_handler)
+        gitManager.commit_release(version_handler)
 
         click.secho(changelog_handler.new_text_to_append, fg='green')
 

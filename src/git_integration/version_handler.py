@@ -10,7 +10,7 @@ class VersionHandler():
 
     def apply(self):
         with open(self.versioninfo_path, 'w', encoding='utf-8') as f:
-            f.write(self.__get_next_version(self.old_version))
+            f.write(self.get_next_version())
 
     def set_dic_commit(self, dic_commit):
         self.dic_commit = dic_commit
@@ -18,6 +18,7 @@ class VersionHandler():
     def __get_current_version(self, version_info_path):
         with open(version_info_path, 'r', encoding='utf-8') as f:
             content = f.read().strip().lower()
+
         if re.match('^v([0-9]*\.){2}[0-9]*$', content):
             return content
         else:
