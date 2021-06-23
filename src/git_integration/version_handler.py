@@ -2,13 +2,18 @@ from os import write
 import re
 
 class VersionHandler():
-    def __init__(self, versioninfo_path):
+    def __init__(self, versioninfo_path, dic_commit={}):
+        self.dic_commit = dic_commit
         self.versioninfo_path = versioninfo_path
         self.old_version = self.__get_current_version(versioninfo_path)
+        self.__new_version = ""
 
-    def apply(self, dic_commits):
+    def apply(self):
         with open(self.versioninfo_path, 'w', encoding='utf-8') as f:
-            f.write(self.__get_next_version(self.versioninfo_path, dic_commits))
+            f.write(self.__get_next_version(self.old_version))
+
+    def set_dic_commit(self, dic_commit):
+        self.dic_commit = dic_commit
 
     def __get_current_version(self, version_info_path):
         with open(version_info_path, 'r', encoding='utf-8') as f:
@@ -18,21 +23,23 @@ class VersionHandler():
         else:
             raise Exception(f'Version info path invalid {content}! Format must be vx.y.z')
 
-    def get_next_version(self, dic_commits):
-        return self.__get_next_version(self.old_version, dic_commits)
+    def get_next_version(self):
+        if not self.__new_version == "":
+            return self.__new_version
 
-    def __get_next_version(self, old_version, dic_commits):
-        if len(dic_commits) == 0 or dic_commits == None:
-            raise Exception("You must specify a dic_commit!")
+        return self.__get_next_version(self.old_version, self.dic_commit)
 
+    def __get_next_version(self, old_version, dic_commit):
+        if len(dic_commit) == 0 or dic_commit == None:
+            raise Exception("You must set a dic_commit!")
 
         x, y, z = self.__get_xyz(old_version)
 
-        if dic_commits.__contains__('api'):
+        if dic_commit.__contains__('api'):
             return self.__format_xyz(int(x) + 1, 0, 0)
-        elif dic_commits.__contains__('feat'):
+        elif dic_commit.__contains__('feat'):
             return self.__format_xyz(x, int(y) + 1, 0)
-        elif dic_commits.__contains__('fix'):
+        elif dic_commit.__contains__('fix'):
             return self.__format_xyz(x, y, int(z) + 1)
 
         return self.__format_xyz(x, y, z)

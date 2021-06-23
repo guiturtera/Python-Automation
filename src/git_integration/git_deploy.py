@@ -32,12 +32,13 @@ def deploy(repo_directory, changelog, version_info):
         gitManager = GitManager(repo_directory)
         lastCommits = gitManager.get_commits_since_last_release()
 
-        version_handler = VersionHandler(version_info)
+        version_handler = VersionHandler(version_info, lastCommits)
         changelog_handler = ChangelogHandler(changelog, lastCommits, version_handler)
 
         changelog_handler.apply()
+        version_handler.apply()
 
-        gitManager.commit_release(version_handler)
+        #gitManager.commit_release(version_handler)
 
         click.secho(changelog_handler.new_text_to_append, fg='green')
 

@@ -76,8 +76,3 @@ class Msbuild(Builder):
                 return_tuple[index] = os.path.join(return_tuple[index], i)
         
         return return_tuple
-
-    def __load_app_config(self, app_config_path):
-        with open('..\\appconfig.json', 'r', encoding="utf-8") as file:
-            app_config = json.load(file)
-        return app_config

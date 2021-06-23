@@ -31,7 +31,7 @@ class TestChangelogHandler(unittest.TestCase):
         self.changelog_mock_path = '.\\unit_tests\\changelog.md'
         self.create_changelog_mock()
 
-        self.changelog_handler = ChangelogHandler(self.changelog_mock_path, self.commit_dic, VersionHandler(self.versioninfo_path))
+        self.changelog_handler = ChangelogHandler(self.changelog_mock_path, self.commit_dic, VersionHandler(self.versioninfo_path, self.commit_dic))
 
     def test___load_changelog(self):
         self.assertEqual(self.changelog_mock_text, self.changelog_handler._ChangelogHandler__load_changelog(self.changelog_mock_path))

@@ -9,7 +9,7 @@ class ChangelogHandler():
         self.changelog_path = changelog_path
         self.commits_dic = commits_dic
         self.version_info = version_info
-        new_version = version_info.get_next_version(commits_dic)
+        new_version = version_info.get_next_version()
 
         self.__changelog_content = self.__load_changelog(changelog_path)
         self.new_text_to_append = self.__changelog_text_to_append(commits_dic, new_version)
@@ -17,7 +17,6 @@ class ChangelogHandler():
     def apply(self):
         with open(self.changelog_path, 'w', encoding='utf-8') as f:
             f.write(f"{self.new_text_to_append}\n{self.__changelog_content}")
-        self.version_info.apply(self.commits_dic)
 
     def __load_changelog(self, changelog_path):
         with open(changelog_path, 'r', encoding='utf-8') as f:

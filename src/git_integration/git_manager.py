@@ -13,7 +13,7 @@ class GitManager():
         #    raise Exception('Not a single git repo!')
 
     def commit_release(self, versioninfo: VersionHandler):
-        commit_msg = f"release: {versioninfo.new_version}"
+        commit_msg = f"release: {versioninfo.get_next_version()}"
         self.gitHandler.add(".")
         self.gitHandler.commit("-m", commit_msg)
 
