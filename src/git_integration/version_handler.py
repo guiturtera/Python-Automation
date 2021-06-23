@@ -31,7 +31,7 @@ class VersionHandler():
 
     def __get_next_version(self, old_version, dic_commit):
         if len(dic_commit) == 0 or dic_commit == None:
-            raise Exception("You must set a dic_commit!")
+            raise Exception("You must set a dic_commit for de versioninfo!")
 
         x, y, z = self.__get_xyz(old_version)
 

@@ -12,7 +12,7 @@ class Msbuild(Builder):
     def __init__(self, root_project_dir: str, builder_path: str, version_info: VersionHandler, company_name="") -> None:
         super().__init__(root_project_dir, builder_path)
         self.default_assembly = self.__load_default_assembly(os.path.join(os.path.dirname(__file__), 'default_assemblies', 'msbuild'))
-        self.version_info = version_info.new_version
+        self.version_info = version_info.get_next_version()
         self.company_name = company_name
 
 
@@ -31,20 +31,22 @@ class Msbuild(Builder):
             # raise SystemExit(f"FAILED TO BUILD {project_file}")
 
     def __write_assembly(self, project_path, project_name):
-        path_to_write = os.path.join(project_path, "Properties", "AssemblyInfo.cs")
-        
-        description = f"Wrapper for {project_name}"
-        year = datetime.now().year
-        data_to_write = self.default_assembly.format(
-            project_name, description, self.company_name, year, self.version_info)
-        
-        with open(path_to_write, "w", encoding="utf-8") as file:
-            file.write(data_to_write)
+        try:
+            path_to_write = os.path.join(project_path, "Properties", "AssemblyInfo.cs")
+            
+            description = f"Wrapper for {project_name}"
+            year = datetime.now().year
+            data_to_write = self.default_assembly.format(
+                project_name=project_name, description=description, company_name=self.company_name, year=year, version=self.version_info)
+            
+            with open(path_to_write, "w", encoding="utf-8") as file:
+                file.write(data_to_write)
+        except:
+            raise Exception(f"Invalid project path! {project_path}")
 
     def __load_default_assembly(self, default_assembly_path) -> str:
-        # project_name, description, company_name, year, version
         with open(default_assembly_path, "r", encoding="utf-8") as file:
-            default_assembly = file.read()
+            default_assembly = file.read()  # project_name, description, company_name, year, version
         return default_assembly
 
     def prepare_and_build_multiple(self, pattern_from_root: str):
@@ -56,7 +58,7 @@ class Msbuild(Builder):
             if os.path.isdir(os.path.join(wipe_path, project)):
                 project_folder = os.path.join(wipe_path, project, standard_path)
                 project_path = os.path.join(project_folder, f"{project}.csproj")
-
+                
                 __write_assembly(project_folder, project)
                 build(project_path)
 
