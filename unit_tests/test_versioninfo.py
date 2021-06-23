@@ -20,21 +20,21 @@ class TestVersionHandler(unittest.TestCase):
     def test___get_version(self):
         self.assertEqual(self.versioninfo, VersionHandler._VersionHandler__get_current_version(None, self.versioninfo_path))
 
-        self.create_versioninfo_mock('1.0.2')
+        self.create_versioninfo_mock('v1.0.2')
         try:
             VersionHandler._VersionHandler__get_current_version(None, self.versioninfo_path)
         except Exception as ex:
             self.assertEqual('Version info path invalid! Format must be vx.y.z', ex.args[0])
 
     def test___get_next_version(self):
-        handler = VersionHandler(self.versioninfo_path, self.commit_dic)
-        self.assertEqual('v1.1.3', handler._VersionHandler__get_next_version("v1.1.2", { 'fix': None }))
-        self.assertEqual('v1.2.0', handler._VersionHandler__get_next_version("v1.1.2", { 'feat': None }))
-        self.assertEqual('v2.0.0', handler._VersionHandler__get_next_version("v1.1.2", { 'api': None }))
-        self.assertEqual('v2.0.0', handler._VersionHandler__get_next_version("v1.1.2", { 'api': None, 'feat': None }))
-        self.assertEqual('v2.0.0', handler._VersionHandler__get_next_version("v1.1.2", { 'api': None, 'fix': None}))
-        self.assertEqual('v1.2.0', handler._VersionHandler__get_next_version("v1.1.2", { 'feat': None, 'fix': None }))
-        self.assertEqual('v2.0.0', handler._VersionHandler__get_next_version("v1.1.2", { 'feat': None, 'fix': None, 'api': None }))
+        handler = VersionHandler(self.versioninfo_path)
+        self.assertEqual('v1.1.3', handler._VersionHandler__get_next_version("v1.1.2", { 'fix': None }), self.commit_dic)
+        self.assertEqual('v1.2.0', handler._VersionHandler__get_next_version("v1.1.2", { 'feat': None }), self.commit_dic)
+        self.assertEqual('v2.0.0', handler._VersionHandler__get_next_version("v1.1.2", { 'api': None }), self.commit_dic)
+        self.assertEqual('v2.0.0', handler._VersionHandler__get_next_version("v1.1.2", { 'api': None, 'feat': None }), self.commit_dic)
+        self.assertEqual('v2.0.0', handler._VersionHandler__get_next_version("v1.1.2", { 'api': None, 'fix': None}), self.commit_dic)
+        self.assertEqual('v1.2.0', handler._VersionHandler__get_next_version("v1.1.2", { 'feat': None, 'fix': None }), self.commit_dic)
+        self.assertEqual('v2.0.0', handler._VersionHandler__get_next_version("v1.1.2", { 'feat': None, 'fix': None, 'api': None }), self.commit_dic)
 
     def test___format_xyz(self):
         self.assertEqual("v1.0.2", VersionHandler._VersionHandler__format_xyz(None, 1, 0, 2))

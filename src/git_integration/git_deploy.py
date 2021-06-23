@@ -32,10 +32,9 @@ def deploy(repo_directory, changelog, version_info):
         gitManager = GitManager(repo_directory)
         lastCommits = gitManager.get_commits_since_last_release()
 
-        version_handler = VersionHandler(version_info, lastCommits)
+        version_handler = VersionHandler(version_info)
         changelog_handler = ChangelogHandler(changelog, lastCommits, version_handler)
 
-        version_handler.apply()
         changelog_handler.apply()
 
         gitManager.commit_release(version_handler)
