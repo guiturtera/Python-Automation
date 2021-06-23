@@ -4,3 +4,4 @@
 	- Python Basics
 	  - Hello World
 	  - Data types
+	  - Decorators
