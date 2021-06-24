@@ -8,7 +8,7 @@ from src.git_integration.git_manager import Commit
 
 from src.build_integration.msbuild import Msbuild
 
-class TestVersionHandler(unittest.TestCase):
+class TestMsbuilder(unittest.TestCase):
     def setUp(self) -> None:
         try:
             self.current_dir = os.path.dirname(__file__)
@@ -42,16 +42,8 @@ class TestVersionHandler(unittest.TestCase):
         except: 
             shutil.rmtree(self.mock_dir)
 
-    def test___convert_multiple_pattern(self):
-        type_test = "aux\\aux2\\aux3\\{project_name}\\aux4\\aux5"
-        self.assertEqual([ "aux\\aux2\\aux3", "aux4\\aux5" ], Msbuild._Msbuild__convert_multiple_pattern(None, type_test))
-        try:
-            type_test = "aux\\aux2\\aux3\\aux4\\aux5"
-        except Exception as ex:
-            self.assertEqual('Wrong pattern! {project_name} not specified', ex.args[0])
-
     def test___write_assembly(self):
-        expected = self.msbuildtest.default_assembly.format(project_name="mock_project", description="Wrapper for mock_project", company_name="Presys", year=datetime.now().year, version="v1.1.0")
+        expected = self.msbuildtest.default_assembly.format(project_name="mock_project", description="Wrapper for mock_project", company_name="Presys", year=datetime.now().year, version="1.1.0")
         self.msbuildtest._Msbuild__write_assembly(self.mock_dir, "mock_project")
         with open(self.assembly_mock, "r", encoding='utf-8') as f:
             result = f.read()
@@ -62,12 +54,21 @@ class TestVersionHandler(unittest.TestCase):
         result = Msbuild._Msbuild__load_default_assembly(None, self.assembly_mock)
         self.assertEqual(self.default_assembly_mock, result)
 
-    def test_build(self):
-        ''' Specific framework call '''
-        pass
+    def test___get_project_name(self):
+        mock_path = os.path.join(self.properties_mock, "bar.csproj")
+        with open(mock_path, "w", encoding='utf-8') as f:
+                f.write("some_text")
 
-    def test_prepare_and_build_multiple(self):
-        pass
+        self.assertEqual("bar", self.msbuildtest._Msbuild__get_project_name(mock_path))
+        try:
+            self.assertEqual("bar", self.msbuildtest._Msbuild__get_project_name("error/foo/bar.csproj"))
+        except Exception as ex:
+            self.assertEqual("Invalid project path -> error/foo/bar.csproj", ex.args[0])
+
+        try:
+            self.assertEqual("bar", self.msbuildtest._Msbuild__get_project_name(self.mock_dir))
+        except Exception as ex:
+            self.assertEqual(f"Invalid project path -> {self.mock_dir}",  ex.args[0])
 
     def tearDown(self) -> None:
         shutil.rmtree(self.mock_dir)

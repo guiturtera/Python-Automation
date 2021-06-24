@@ -5,12 +5,12 @@ from click.decorators import version_option
 from git_integration.version_handler import VersionHandler
 
 class ChangelogHandler():
-    def __init__(self, changelog_path, commits_dic, version_info) -> None:
+    def __init__(self, changelog_path, commits_dic, version_info: VersionHandler) -> None:
         self.changelog_path = changelog_path
         self.commits_dic = commits_dic
         self.version_info = version_info
         version_info.set_dic_commit(commits_dic)
-        new_version = version_info.get_next_version()
+        new_version = version_info.get_next_version_for_changelog()
 
         self.__changelog_content = self.__load_changelog(changelog_path)
         self.new_text_to_append = self.__changelog_text_to_append(commits_dic, new_version)

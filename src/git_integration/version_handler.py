@@ -10,7 +10,7 @@ class VersionHandler():
 
     def apply(self):
         with open(self.versioninfo_path, 'w', encoding='utf-8') as f:
-            f.write(self.get_next_version())
+            f.write(self.get_next_version_for_changelog())
 
     def set_dic_commit(self, dic_commit):
         self.dic_commit = dic_commit
@@ -24,11 +24,17 @@ class VersionHandler():
         else:
             raise Exception(f'Version info path invalid {content}! Format must be vx.y.z')
 
-    def get_next_version(self):
+    def get_next_version_for_changelog(self):
         if not self.__new_version == "":
             return self.__new_version
 
         return self.__get_next_version(self.old_version, self.dic_commit)
+
+    def get_next_version_for_assembly(self):
+        if not self.__new_version == "":
+            return self.__new_version.removeprefix('v')
+
+        return self.__get_next_version(self.old_version, self.dic_commit).removeprefix('v')
 
     def __get_next_version(self, old_version, dic_commit):
         if len(dic_commit) == 0 or dic_commit == None:

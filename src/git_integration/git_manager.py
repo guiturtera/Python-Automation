@@ -13,7 +13,7 @@ class GitManager():
         #    raise Exception('Not a single git repo!')
 
     def commit_release(self, versioninfo: VersionHandler):
-        commit_msg = f"release: {versioninfo.get_next_version()}"
+        commit_msg = f"release: {versioninfo.get_next_version_for_changelog()}"
         self.gitHandler.add(".")
         self.gitHandler.commit("-m", commit_msg)
 
@@ -33,7 +33,7 @@ class GitManager():
     def __get_organized_commits_dic(self, commits_data):
         dic = {}
         if commits_data[0] == "":
-            raise Exception("no commits to release.")
+            raise Exception("no commits since release.")
 
         for log in commits_data:
             commit_list = log.split('|')  # hash|message|name lastname|date

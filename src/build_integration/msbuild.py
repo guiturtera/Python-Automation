@@ -10,13 +10,22 @@ from git_integration.version_handler import VersionHandler
 class Msbuild(Builder):
     # Msbuild_path
     def __init__(self, root_project_dir: str, builder_path: str, version_info: VersionHandler, company_name="") -> None:
-        super().__init__(root_project_dir, builder_path)
+        super().__init__()
+        self.root_project_dir = root_project_dir
+        self.builder_path = builder_path
         self.default_assembly = self.__load_default_assembly(os.path.join(os.path.dirname(__file__), 'default_assemblies', 'msbuild'))
-        self.version_info = version_info.get_next_version()
+        self.version_info = version_info.get_next_version_for_assembly()
         self.company_name = company_name
+        self.extension = ".csproj"
 
+    def prepare_for_build(self, pattern):
+        project_path = os.path.normpath(os.path.join(self.root_project_dir, os.path.dirname(pattern)))
+        project_file = os.path.normpath(os.path.join(self.root_project_dir, pattern))
+        project_name = self.__get_project_name(project_file)
+        self.__write_assembly(project_path, project_name)
 
-    def build(self, project_file: str):
+    def build(self, pattern: str):
+        project_file = os.path.normpath(os.path.join(self.root_project_dir, pattern))
         result = subprocess.run(
             [self.builder_path, project_file, "-target:Rebuild", "-property:Configuration=Release", "-clp:ErrorsOnly;NoItemAndPropertyList", "-verbosity:quiet", "-nologo"],
             capture_output=True, text=True
@@ -26,9 +35,16 @@ class Msbuild(Builder):
             return f"{project_file} Success to build!"
             # print(Fore.GREEN, f"{project_file} Success to build!" + Style.RESET_ALL)
         else:
-            raise Exception("Failed to build!")
+            raise Exception(f"Failed to build!\n{result.stdout}")
             # print(Fore.RED, f"{project_file} Failed to build!" + Style.RESET_ALL)
             # raise SystemExit(f"FAILED TO BUILD {project_file}")
+
+    def __get_project_name(self, project_file) -> str:
+        project_file_name = os.path.basename(project_file)
+        if os.path.isfile(project_file) and project_file_name.__contains__(self.extension):
+            return project_file_name.removesuffix(self.extension)
+        else:
+            raise Exception(f"Invalid project path -> {project_file}")
 
     def __write_assembly(self, project_path, project_name):
         try:
@@ -48,33 +64,4 @@ class Msbuild(Builder):
         with open(default_assembly_path, "r", encoding="utf-8") as file:
             default_assembly = file.read()  # project_name, description, company_name, year, version
         return default_assembly
-
-    def prepare_and_build_multiple(self, pattern_from_root: str):
-        wipe_path, standard_path = __convert_multiple_pattern(pattern_from_root)
-        wipe_path = os.path.join(self.root_project_dir, wipe_path)
-        standard_path = os.path.join(self.root_project_dir, standard_path)
-
-        for project in os.listdir(wipe_path):
-            if os.path.isdir(os.path.join(wipe_path, project)):
-                project_folder = os.path.join(wipe_path, project, standard_path)
-                project_path = os.path.join(project_folder, f"{project}.csproj")
-                
-                __write_assembly(project_folder, project)
-                build(project_path)
-
-    def __convert_multiple_pattern(self, pattern_from_root: str) -> tuple[str, str]:
-        if not pattern_from_root.__contains__('{project_name}'):
-            raise Exception('Wrong pattern! {project_name} not specified')
-        
-        aux = os.path.normpath(pattern_from_root)
-        aux = aux.split(os.sep)
-        return_tuple = [ "", "" ]
-
-        index = 0
-        for i in aux:
-            if i == "{project_name}":
-                index += 1
-            else:
-                return_tuple[index] = os.path.join(return_tuple[index], i)
-        
-        return return_tuple
+       
