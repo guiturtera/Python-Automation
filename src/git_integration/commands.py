@@ -1,9 +1,5 @@
-from click.decorators import command
 from git_integration import git_deploy, git_hook
 import click
-
-def command():
-    return git
 
 @click.group()
 def git():

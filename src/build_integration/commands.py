@@ -10,9 +10,6 @@ from git_integration import git_deploy
 import click
 import os
 
-def command():
-    return build
-
 @click.group()
 def build():
     """ Write 'flick build --help' for more info """
@@ -75,9 +72,9 @@ def msbuild(recursive, repo_directory, pattern, msbuild_path, version_info, comp
     if version_info == None:
         version_info = os.path.join(repo_directory, "versioninfo.txt")
 
-    version_handler = VersionHandler(version_info, GitManager(repo_directory).get_commits_since_last_release())
-    msbuild_builder = Msbuild(repo_directory, msbuild_path, version_handler, company_name)
     try:
+        version_handler = VersionHandler(version_info, GitManager(repo_directory).get_commits_since_last_release())
+        msbuild_builder = Msbuild(repo_directory, msbuild_path, version_handler, company_name)
         if recursive:
             recursive_builder = RecursiveBuilder(msbuild_builder)
             recursive_builder.prepare_for_build(pattern)
