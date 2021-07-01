@@ -1,12 +1,12 @@
 import os
 from enum import Enum
 
-from unittest_integration.runner_test import RunnerTest
+from nunit_integration.runner_test import RunnerTest
 
 #class EnumExitCode(Enum):
      
 
-class NUnitUnitRunner(RunnerTest):
+class UnitRunner(RunnerTest):
     def __init__(self, test_path: str) -> None:
         self.test_path = test_path
         pass

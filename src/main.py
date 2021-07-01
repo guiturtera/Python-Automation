@@ -2,7 +2,7 @@ import click
 
 from git_integration.commands import git
 from build_integration.commands import build
-from unittest_integration.commands import unittest
+from nunit_integration.commands import nunit
 
 @click.group()
 def cli():
@@ -10,4 +10,5 @@ def cli():
 
 cli.add_command(git)
 cli.add_command(build)
-cli.add_command(unittest)
+cli.add_command(nunit)
+cli.add_command(test)
