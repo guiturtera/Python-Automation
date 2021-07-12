@@ -43,7 +43,7 @@ class TestFunctionalRunner(unittest.TestCase):
 
         request = MockRequest(True, "", "", "")
         response = FunctionalRunner("", request).run()
-        self.assertEqual("success!!", response)
+        self.assertEqual((True, "success!!\r\n"), response)
 
 if __name__ == '__main__':
     unittest.main()

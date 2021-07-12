@@ -18,4 +18,4 @@ class RequestFacade(Request):
 
             return jsonRes
         except Exception as ex:
-            return { "Success": False, "Message": "Failed -> " + url, "ErrorMessage": ex.args, "ExitCode": 105 }
+            return { "Success": False, "Message": "Failed -> " + url, "ErrorMessage": ex.args, "ExitCode": 110 }

@@ -32,7 +32,7 @@ class Msbuild(Builder):
         )
 
         if result.stdout == "":
-            return f"{project_file} Success to build!"
+            return f"{os.path.basename(project_file)} Success to build!"
             # print(Fore.GREEN, f"{project_file} Success to build!" + Style.RESET_ALL)
         else:
             raise Exception(f"Failed to build!\n{result.stdout}")

@@ -8,6 +8,7 @@ from build_integration.recursive_build import RecursiveBuilder
 from git_integration import git_deploy
 
 import click
+import sys
 import os
 
 @click.group()
@@ -87,6 +88,7 @@ def msbuild(recursive, repo_directory, pattern, msbuild_path, version_info, comp
     except Exception as ex:
         for i in ex.args:
             click.secho(i, fg='red')
+        sys.exit(1)
     
 
 #version_handler = VersionHandler("C:\\Users\\guilherme.turtera\\Desktop\\au\\versioninfo.txt", GitManager("C:\\Users\\guilherme.turtera\\Desktop\\au").get_commits_since_last_release())

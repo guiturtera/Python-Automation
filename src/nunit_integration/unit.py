@@ -1,10 +1,12 @@
-from nunit_integration.unit_runner import UnitRunner
 import click
+import sys
 import os
+
+from nunit_integration.unit_runner import UnitRunner
 
 
 @click.command()
-@click.argument('test-to-run', type=click.Path(exists=True, allow_dash=True))
+@click.argument('test-to-run')#, type=click.Path(exists=True, allow_dash=True))
 def unit(test_to_run):
     ''' 
     flick nunit unit <test_to_run>
@@ -21,3 +23,4 @@ def unit(test_to_run):
     else: color = 'red'
 
     click.secho(message, fg=color)
+    sys.exit(1)
