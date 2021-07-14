@@ -10,7 +10,7 @@ class GoldenImageRunner():
         self.version = version
         self.SDCard_name = SDCard_name
         self.database_path = database_address
-        self.database_path_to_copy = os.path.join(self.database_path, "V" + version)
+        self.database_path_to_copy = os.path.join(self.database_path, "release-" + version)
         self.remote_dir = f'//{self.request.ip_adress}/{self.SDCard_name}'
         self.golden_image_path = f'{self.remote_dir}/golden_image/flashbackup.bin'
 
