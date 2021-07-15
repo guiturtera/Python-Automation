@@ -3,7 +3,7 @@ import click
 from git_integration.commands import git
 from build_integration.commands import build
 from nunit_integration.commands import nunit
-from golden_image.commands import toradex
+from toradex.commands import toradex
 
 @click.group()
 def cli():

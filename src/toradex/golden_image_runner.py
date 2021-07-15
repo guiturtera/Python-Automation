@@ -16,9 +16,9 @@ class GoldenImageRunner():
 
     def run(self):
         validateRes = self._verify_connection()
-        if not self._verify_connection()["Success"]: return validateRes
+        if not validateRes["Success"]: return validateRes
         validateRes = self._verify_remote()
-        if not self._verify_remote()["Success"]: return validateRes
+        if not validateRes["Success"]: return validateRes
 
         res = self.request.getjson()
         if self._verify_success(res):
@@ -69,5 +69,5 @@ class GoldenImageRunner():
                 "Success": False,
                 "Message": f"Golden image of this version already exists! {self.database_path_to_copy}",
                 "ErrorMessage": "",
-                "ExitCode": "" 
+                "ExitCode": 1
             }
