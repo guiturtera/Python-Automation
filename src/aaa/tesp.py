@@ -1,4 +1,12 @@
-import click
+import subprocess
+
+args = ["xcopy", "C:\\Users\\guilherme.turtera\\Desktop\\kk", "\\\\192.168.31.92\\flashdisk\\flashdisk", "/Y", "/E", "/Q"]
+proc = subprocess.Popen(args)
+exit_code = proc.wait()
+print(exit_code)
+
+'''
+    import click
 
 @click.group()
 @click.argument('name', type=str)
@@ -18,3 +26,4 @@ def command1(ctx):
 gp.add_command(command1)
 if __name__ == "__main__":
     gp()
+    '''
