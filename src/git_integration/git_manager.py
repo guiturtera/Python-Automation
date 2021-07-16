@@ -3,7 +3,7 @@ from git_integration.version_handler import VersionHandler
 import sys
 import os
 import git
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class GitManager():
     def __init__(self, repo_directory) -> None:
@@ -20,7 +20,7 @@ class GitManager():
     def __get_last_release_date(self):
         strIso = (self.gitHandler.log("-n 1", "--grep=release", "--oneline", "--pretty=%ci")).replace(" -0300", "")   # default -0300 from git
         aux = datetime.fromisoformat(strIso) # git default
-        aux = aux.replace(second = aux.second + 1)
+        aux = (aux + timedelta(seconds=1))
         return aux
     
     def get_commits_since_last_release(self):
@@ -72,7 +72,7 @@ class Commit:
         try:
             data = re.split("[\(:]", message)
             type, description = [ data[0], data[len(data) - 1].strip() ]
-            if available_types_dic.__contains__(type) and re.match(type + "(\(.{3,15}\))?: .{6,}", message):
+            if available_types_dic.__contains__(type.lower()) and re.match(type + "(\(.{3,15}\))?: .{6,}", message):
                 return ( True, type, description )
             else:
                 return ( False, '', '' )
