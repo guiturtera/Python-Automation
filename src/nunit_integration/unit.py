@@ -23,4 +23,4 @@ def unit(test_to_run):
     else: color = 'red'
 
     click.secho(message, fg=color)
-    sys.exit(1)
+    sys.exit(0 if success else 1)

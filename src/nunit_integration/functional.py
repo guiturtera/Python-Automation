@@ -49,6 +49,7 @@ def functional(port, auth, test_to_run, ip, url_path):
     else: color = 'red'
 
     click.secho(message, fg=color)
+    sys.exit(0 if success else 1)
     #params = ["--where \"cat == UnitTest\""]
         
     #success, message = UnitRunner(test_to_run).run(params)

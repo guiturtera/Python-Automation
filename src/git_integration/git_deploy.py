@@ -1,4 +1,5 @@
 import re
+import sys
 import os
 from typing import Type
 import click
@@ -45,4 +46,5 @@ def deploy(repo_directory, changelog, version_info):
     except Exception as ex:
         for i in ex.args:
             click.secho(i, fg='red')
+        sys.exit(1)
 

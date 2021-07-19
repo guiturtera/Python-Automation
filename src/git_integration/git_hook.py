@@ -1,4 +1,5 @@
 import os
+import sys
 import click
 import shutil
 
@@ -98,7 +99,8 @@ def install_hooks(repo_directory, overwrite, all, script):
     except Exception as ex:
         for i in ex.args:
             click.secho(i, fg='red')
-        click.echo(ex.with_traceback())
+        sys.exit(1)
+        
 @click.command()
 @click.argument('repo_directory', type=click.Path(exists=True, allow_dash=True))
 def uninstall_hooks(repo_directory):
@@ -115,3 +117,4 @@ def uninstall_hooks(repo_directory):
     except Exception as ex:
         for i in ex.args:
             click.secho(i, fg='red')
+        sys.exit(1)

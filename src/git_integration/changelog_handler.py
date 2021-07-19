@@ -30,7 +30,7 @@ class ChangelogHandler():
         buffer.write(new_version)
         buffer.write('] \n')
         for commit_type in commits_dic.keys():
-            if not commit_type == 'improvement':
+            if not commit_type.lower() == 'improvement':
                 buffer.write('### ')
                 buffer.write(commit_type)
                 buffer.write('\n')
