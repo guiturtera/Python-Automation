@@ -27,7 +27,7 @@ def golden_image(ctx, device_name, database_adress, version):
     Will search golden image into \\IP\\device-name
     The default database-adress is SD Card
     '''
-    if not re.match('([0-9]+\.){2}[0-9]+$', version):
+    if not re.match('^v([0-9]*\.){2}[0-9]*$', version):
         raise click.exceptions.BadParameter('Invalid version. Must be X.Y.Z')
 
     req = RequestFacade(ctx.obj['ip'], "pages/goldenimage.cgi", port_number=ctx.obj['port'], login=ctx.obj['login'], password=ctx.obj['password'])
