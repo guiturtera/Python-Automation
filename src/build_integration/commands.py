@@ -24,7 +24,8 @@ def build():
 @click.option('--msbuild_path', type=click.Path(exists=True, allow_dash=True), default="C:/Windows/Microsoft.NET/Framework/v3.5/MSBuild.exe")
 @click.option('--version-info', '--vinfo', type=click.Path(exists=True, allow_dash=True))
 @click.option('--company-name', '--cn', type=str)
-def msbuild(recursive, repo_directory, pattern, msbuild_path, version_info, company_name):
+@click.option('--last_release_message', '--lrm', type=str, default=None)
+def msbuild(recursive, repo_directory, pattern, msbuild_path, version_info, company_name, last_release_message):
     '''
     flick build [-r] msbuild <repo_directory> <pattern> [--msbuild_path=<path>] [--version-info=<path>] [--company-name=<name>]
 
@@ -68,13 +69,15 @@ def msbuild(recursive, repo_directory, pattern, msbuild_path, version_info, comp
     --version-info
     Case set, will search for a literal str in the path, formatted as 'v1.0.0'
     Case not set, will search in the root <repo_directory> for a versioninfo.txt path, with only the version inside it.
+
+    --last_release_message -> When starting development, implement this to work for your first incompatible release.
     '''
 
     if version_info == None:
         version_info = os.path.join(repo_directory, "versioninfo.txt")
 
     try:
-        version_handler = VersionHandler(version_info, GitManager(repo_directory).get_commits_since_last_release())
+        version_handler = VersionHandler(version_info, GitManager(repo_directory, last_release_message=last_release_message).get_commits_since_last_release())
         msbuild_builder = Msbuild(repo_directory, msbuild_path, version_handler, company_name)
         if recursive:
             recursive_builder = RecursiveBuilder(msbuild_builder)

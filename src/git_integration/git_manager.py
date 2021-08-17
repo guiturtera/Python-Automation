@@ -6,9 +6,10 @@ import git
 from datetime import datetime, timedelta
 
 class GitManager():
-    def __init__(self, repo_directory) -> None:
+    def __init__(self, repo_directory, last_release_message=None) -> None:
         self.repo_directory = repo_directory
         self.gitHandler = git.Git(repo_directory)
+        self.last_release_message = last_release_message
         #if not Repo(repo_directory).bare:
         #    raise Exception('Not a single git repo!')
 
@@ -18,7 +19,10 @@ class GitManager():
         self.gitHandler.commit("-m", commit_msg)
 
     def __get_last_release_date(self):
-        strIso = (self.gitHandler.log("-n 1", "--grep=release", "--oneline", "--pretty=%ci")).replace(" -0300", "")   # default -0300 from git
+        if self.last_release_message:
+            strIso = (self.gitHandler.log("-n 1", f"--grep={self.last_release_message}", "--oneline", "--pretty=%ci")).replace(" -0300", "")
+        else:
+            strIso = (self.gitHandler.log("-n 1", "--grep=release", "--oneline", "--pretty=%ci")).replace(" -0300", "")   # default -0300 from git
         aux = datetime.fromisoformat(strIso) # git default
         aux = (aux + timedelta(seconds=1))
         return aux

@@ -11,7 +11,8 @@ from git_integration.changelog_handler import ChangelogHandler
 @click.argument('repo_directory', type=click.Path(exists=True, allow_dash=True))
 @click.option('--changelog', type=click.Path(exists=True, allow_dash=True))
 @click.option('--version-info', '--vinfo', type=click.Path(exists=True, allow_dash=True))
-def deploy(repo_directory, changelog, version_info):
+@click.option('--last_release_message', '--lrm', type=str, default=None)
+def deploy(repo_directory, changelog, version_info, last_release_message):
     """
     You must specify your git directory!
     flick git deploy [git_directory_path] <options>
@@ -24,6 +25,8 @@ def deploy(repo_directory, changelog, version_info):
     --version-info=<full-path>
     Case set, will search for a literal str in the path, formatted as 'v1.0.0'
     Case not set, will search in the root [git_directory_path] for a versioninfo.txt path, with only the version inside it.
+
+    --last_release_message -> When starting development, implement this to work for your first incompatible release.
     """
     try:
         if changelog == None:
@@ -31,7 +34,7 @@ def deploy(repo_directory, changelog, version_info):
         if version_info == None:
             version_info = os.path.join(repo_directory, "versioninfo.txt")
 
-        gitManager = GitManager(repo_directory)
+        gitManager = GitManager(repo_directory, last_release_message=last_release_message)
         lastCommits = gitManager.get_commits_since_last_release()
 
         version_handler = VersionHandler(version_info, lastCommits)
